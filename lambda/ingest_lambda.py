@@ -1,30 +1,31 @@
 import json
 import boto3
-import datetime
+from datetime import datetime
+import uuid
 
-s3 = boto3.client('s3')
-BUCKET_NAME = "event-driven-data-bucket"
+s3 = boto3.client("s3")
+BUCKET_NAME = "event-driven-data-bucket232004"
 
 def lambda_handler(event, context):
-    try:
-        body = json.loads(event['body'])
-        timestamp = datetime.datetime.utcnow().isoformat()
-        file_name = f"raw/event_{timestamp}.json"
+    data = {
+        "order_id": str(uuid.uuid4()),
+        "amount": 250,
+        "timestamp": datetime.utcnow().isoformat()
+    }
 
-        s3.put_object(
-            Bucket=BUCKET_NAME,
-            Key=file_name,
-            Body=json.dumps(body)
-        )
+    file_key = f"raw/orders_{data['order_id']}.json"
 
-        return {
-            "statusCode": 200,
-            "body": json.dumps("Event stored successfully")
-        }
+    s3.put_object(
+        Bucket=BUCKET_NAME,
+        Key=file_key,
+        Body=json.dumps(data),
+        ContentType="application/json"
+    )
 
-    except Exception as e:
-        print(e)
-        return {
-            "statusCode": 500,
-            "body": json.dumps("Error storing event")
-        }
+    return {
+        "statusCode": 200,
+        "body": json.dumps({
+            "message": "Order stored successfully",
+            "file": file_key
+        })
+    }

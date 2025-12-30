@@ -2,7 +2,7 @@ import boto3
 import json
 
 s3 = boto3.client('s3')
-BUCKET_NAME = "event-driven-data-bucket"
+BUCKET_NAME = "event-driven-data-bucket232004"
 
 def lambda_handler(event, context):
     response = s3.list_objects_v2(Bucket=BUCKET_NAME, Prefix="raw/")
