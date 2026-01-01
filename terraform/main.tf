@@ -17,15 +17,16 @@ provider "aws" {
 
 data "archive_file" "ingest_zip" {
   type        = "zip"
-  source_file = "../lambda/ingest_lambda.py"
-  output_path = "ingest.zip"
+  source_file = "${path.module}/../lambda/ingest_lambda.py"
+  output_path = "${path.module}/ingest.zip"
 }
 
 data "archive_file" "report_zip" {
   type        = "zip"
-  source_file = "../lambda/report_lambda.py"
-  output_path = "report.zip"
+  source_file = "${path.module}/../lambda/report_lambda.py"
+  output_path = "${path.module}/report.zip"
 }
+
 
 resource "aws_s3_bucket" "data_bucket" {
   bucket = "event-driven-data-bucket232004"
